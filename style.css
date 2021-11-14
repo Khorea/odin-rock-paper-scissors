@@ -1,0 +1,98 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 0px;
+    height: 100vh;
+    background-color: azure;
+}
+
+button {
+    background-color: transparent;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: silver;
+}
+
+p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.header,
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: darkslategrey;
+}
+
+.header {
+    height: 75px;
+}
+
+.footer {
+    height: 30px;
+}
+
+.header p {
+    font-size: 40px;
+    font-weight: bold;
+    color:white;
+}
+
+.footer p {
+    font-size: 14px;
+    font-weight: bold;
+    color:white;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+    background-color:azure;
+    gap: 50px;
+}
+
+.scoreboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    gap: 30px;
+}
+
+.scoreboard-choices {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.choices {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-left: 30%;
+    padding-right: 30%;
+    margin-bottom: 30px;
+}
+
+.player-score,
+.computer-score {
+    text-align: center;
+}
+
+.rock,
+.paper,
+.scissors {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

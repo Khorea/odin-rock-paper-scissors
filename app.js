@@ -12,11 +12,6 @@ const roundResult = {
     computerWins: 2,
 };
 
-const gameResult = {
-    playerWins: 1,
-    computerWins: 2,
-};
-
 let gameState = {
     playerChoices: new Array(),
     computerChoices: new Array(),
@@ -28,25 +23,16 @@ function getCpuChoice() {
     return cpuChoice = Math.floor(Math.random() * 3);
 }
 
-function getPlayerChoice() {
-    let playerChoice = -1;
-    while (playerChoice === -1) {
-        playerChoice = window.prompt("Rock, Paper or Scissors?")
-        if (playerChoice.toLowerCase() == "rock") {
-            playerChoice = choices.rock;
-        }
-        else if (playerChoice.toLowerCase() === "paper") {
-            playerChoice = choices.paper;
-        }
-        else if (playerChoice.toLowerCase() === "scissors") {
-            playerChoice = choices.scissors;
-        }
-        else {
-            window.alert("Invalid choice!\nPlease choose between rock paper and scissors.")
-            playerChoice = -1;
-        }
+function getPlayerChoice(playerChoice) {
+    if (playerChoice.toLowerCase() == "rock") {
+        return choices.rock;
     }
-    return playerChoice;
+    else if (playerChoice.toLowerCase() === "paper") {
+        return choices.paper;
+    }
+    else if (playerChoice.toLowerCase() === "scissors") {
+        return choices.scissors;
+    }
 }
 
 function determineRoundWinner(playerChoice, cpuChoice) {
@@ -119,52 +105,70 @@ function logGameState(roundWinner, roundNumber) {
     console.groupEnd("Round " + roundNumber);
 }
 
-function playRound() {
-    let playerChoice = getPlayerChoice();
-    let cpuChoice = getCpuChoice();
-    let roundWinner = determineRoundWinner(playerChoice, cpuChoice);
-    updateGameState(roundWinner, playerChoice, cpuChoice)
-    return roundWinner;
-}
+function updateScoreboard(roundWinner) {
+    const scoreboardText = document.querySelector('.scoreboard-text');
+    const playerScoreText = document.querySelector('.player-score p');
+    const computerScoreText = document.querySelector('.computer-score p');
+    const playerChoiceImage = document.querySelector('.player-score img');
+    const computerChoiceImage = document.querySelector('.computer-score img');
+    playerScoreText.textContent = "Player: " + gameState.playerScore;
+    computerScoreText.textContent = "Computer: " + gameState.computerScore;
 
-function playGame(rounds = 5) {
-    if (rounds % 2 === 0) {
-        console.log("Number of rounds must be odd number!")
-        return -1;
+    if (roundWinner === roundResult.tie) {
+        scoreboardText.textContent = "It's a tie!";
     }
-    let playerScore = 0;
-    let cpuScore = 0;
-    for (i = 0; i < rounds; i++) {
-        tie = true;
-        while (tie)
-        {
-            let roundWinner = playRound();
-            logGameState(roundWinner, i + 1);
-            if (roundWinner != roundResult.tie) {
-                tie = false;
-            }
-        }
-        if ((playerScore > Math.floor(rounds / 2)) || (cpuScore > Math.floor(rounds / 2))) {
-            break;
-        }
+    else if (roundWinner === roundResult.playerWins) {
+        scoreboardText.textContent = "You win this round!";
     }
-
-    let gameWinner = (playerScore > cpuScore) ? gameResult.playerWins : gameResult.computerWins;
-    return gameWinner;
-}
-
-let play = true;
-while (play)
-{
-    let gameWinner = playGame(1);
-    let message = (gameWinner === gameResult.playerWins) ? "Congratulations, you won!" : "Computer won!";
-    message = message.concat("\nDo you wish to play again?(y/n)");
-    let playAgain = window.prompt(message);
-    if (playAgain != "y") {
-        play = false;
+    else if (roundWinner === roundResult.computerWins) {
+        scoreboardText.textContent = "Computer wins this round!"
     }
     else {
+        scoreboardText.textContent = "Make your choice"
+        playerChoiceImage.setAttribute('src', 'imgs/rock.png');
+        computerChoiceImage.setAttribute('src', 'imgs/rock.png');
+        return;
+    }
+
+    const pChoice = gameState.playerChoices[gameState.playerChoices.length - 1];
+    const cChoice = gameState.computerChoices[gameState.computerChoices.length - 1];
+
+    if (pChoice === 'Rock') {
+        playerChoiceImage.setAttribute('src', 'imgs/rock.png');
+    }
+    else if (pChoice === 'Paper') {
+        playerChoiceImage.setAttribute('src', 'imgs/paper.png');
+    }
+    else {
+        playerChoiceImage.setAttribute('src', 'imgs/scissors.png');
+    }
+
+    if (cChoice === 'Rock') {
+        computerChoiceImage.setAttribute('src', 'imgs/rock.png');
+    }
+    else if (cChoice === 'Paper') {
+        computerChoiceImage.setAttribute('src', 'imgs/paper.png');
+    }
+    else {
+        computerChoiceImage.setAttribute('src', 'imgs/scissors.png');
+    }
+}
+
+function playRound(playerChoice) {
+    playerChoice = getPlayerChoice(playerChoice);
+    let cpuChoice = getCpuChoice();
+    let roundWinner = determineRoundWinner(playerChoice, cpuChoice);
+    updateGameState(roundWinner, playerChoice, cpuChoice);
+    updateScoreboard(roundWinner);
+
+    if (gameState.playerScore == 5 || gameState.computerScore == 5) {
+        let message = (roundWinner === roundResult.playerWins) ? "Congratulations, you won!" : "Computer won!";
+        alert(message);
         resetGameState();
+        updateScoreboard(-1);
         console.clear();
     }
 }
+
+const buttons = document.querySelectorAll('.choices button');
+buttons.forEach((button) => button.addEventListener('click', () => playRound(button.parentElement.className)));
